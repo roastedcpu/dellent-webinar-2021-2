@@ -1,0 +1,68 @@
+version: '3.6'
+services:
+  frontend-2:
+    image: vhelsi/webinar-frontend:2.0
+    build: 
+      context: ./simple-frontend-app-2
+      dockerfile: Dockerfile
+    environment:
+      - REACT_APP_API_URL=http://localhost:30004/users
+    ports:
+      - 8000:3000
+    networks:
+      webinar-1:
+        aliases:
+          - frontend-v2
+  
+  backend-2:
+    image: vhelsi/webinar-backend-1:2.0
+    build:
+      context: ./backend-2
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    environment:
+      - N_RESULTS=10
+      - DBHOST=db-1
+      - DBUSER=dbuser
+      - DBPASS=demo_password
+      - DBNAME=demodb
+    ports:
+      - 30005:8000
+    networks:
+      webinar-1:
+        aliases:
+          - backend-v2
+
+  db:
+    image: postgres:9.6
+    environment:
+      POSTGRES_USER: dbuser
+      POSTGRES_PASSWORD: demo_password
+      POSTGRES_DB: demodb
+    volumes:
+      - "./populate-db-1.sql:/docker-entrypoint-initdb.d/populate-db.sql"
+    expose:
+      - 5432
+    networks:
+      webinar-1:
+        aliases:
+          - db-1
+
+  db2:
+    image: postgres:9.6
+    environment:
+      POSTGRES_USER: dbuser
+      POSTGRES_PASSWORD: demo_password
+      POSTGRES_DB: demodb
+    volumes:
+      - "./backed_up:/var/lib/postgresql/data"
+    expose:
+      - 5432
+    networks:
+      webinar-1:
+        aliases:
+          - db-2
+
+networks:
+  webinar-1:

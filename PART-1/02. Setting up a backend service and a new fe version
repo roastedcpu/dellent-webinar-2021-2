@@ -1,0 +1,14 @@
+docker-compose -f docker-compose-2.yml up --build
+docker-compose -f docker-compose-2.yml up -d
+---> http://localhost:30004/users
+---> http://localhost:8001
+
+docker-compose -f docker-compose-2.yml stop frontend-1
+docker-compose -f docker-compose-2.yml rm frontend-1
+docker-compose -f docker-compose-3.yml up --build 
+---> http://localhost:8000
+
+
+docker-compose -f docker-compose-1.yml down -v
+docker-compose -f docker-compose-2.yml down -v
+docker-compose -f docker-compose-3.yml down -v

@@ -1,0 +1,83 @@
+version: '3.6'
+services:
+  frontend-1:
+    image: vhelsi/webinar-frontend:1.0
+    build: 
+      context: ./simple-frontend-app-1
+      dockerfile: Dockerfile
+    environment:
+      - REACT_APP_API_URL=https://randomuser.me/api/?results=60
+    expose:
+      - 3000
+    networks:
+      webinar-1:
+        aliases:
+          - frontend-v1
+
+  frontend-2:
+    image: vhelsi/webinar-frontend:2.0
+    build: 
+      context: ./simple-frontend-app-2
+      dockerfile: Dockerfile
+    environment:
+      - REACT_APP_API_URL=http://localhost:30004/users
+    expose:
+      - 3000
+    networks:
+      webinar-1:
+        aliases:
+          - frontend-v2
+  
+  backend-2:
+    image: vhelsi/webinar-backend-1:2.0
+    build:
+      context: ./backend-2
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    environment:
+      - N_RESULTS=10
+      - DBHOST=db-1
+      - DBUSER=dbuser
+      - DBPASS=demo_password
+      - DBNAME=demodb
+    expose:
+      - 8000
+    networks:
+      webinar-1:
+        aliases:
+          - backend-v2
+
+  db:
+    image: postgres:9.6
+    environment:
+      POSTGRES_USER: dbuser
+      POSTGRES_PASSWORD: demo_password
+      POSTGRES_DB: demodb
+    volumes:
+      - "./populate-db-1.sql:/docker-entrypoint-initdb.d/populate-db.sql"
+    expose:
+      - 5432
+    networks:
+      webinar-1:
+        aliases:
+          - db-1
+
+  nginx-proxy-manager:
+      image: jlesage/nginx-proxy-manager:v1.5.3
+      restart: on-failure:5
+      environment:
+          KEEP_APP_RUNNING: 1
+      ports:
+          - "80:8080"
+          - "443:4443"
+          - "9002:8181"
+      networks:
+        webinar-1:
+          aliases:
+            - nginx-proxy-manager
+
+networks:
+  webinar-1:
+    
+    

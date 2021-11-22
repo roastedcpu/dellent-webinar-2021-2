@@ -1,0 +1,7 @@
+docker-compose -f docker-compose-6.yml down -v
+docker-compose -f docker-compose-7.yml up --build
+---> localhost:9002
+admin@example.com
+changeme
+
+add domains to /etc/hosts . configure nginx-proxy-manager .

@@ -1,0 +1,46 @@
+version: '3.6'
+services:
+  frontend-1:
+    image: vhelsi/webinar-frontend:1.0
+    build: 
+      context: ./simple-frontend-app-1
+      dockerfile: Dockerfile
+    environment:
+      - REACT_APP_API_URL=https://randomuser.me/api/?results=60
+    ports:
+      - 8000:3000
+    networks:
+      webinar-1:
+        aliases:
+          - frontend-v1
+
+  frontend-2:
+    image: vhelsi/webinar-frontend:2.0
+    build: 
+      context: ./simple-frontend-app-2
+      dockerfile: Dockerfile
+    environment:
+      - REACT_APP_API_URL=http://localhost:30004/users
+    ports:
+      - 8001:3000
+    networks:
+      webinar-1:
+        aliases:
+          - frontend-v2
+  
+  backend-1:
+    image: vhelsi/webinar-backend-1:1.0
+    build:
+      context: ./backend-1
+      dockerfile: Dockerfile
+    environment:
+      - N_RESULTS=10
+    ports:
+      - 30004:8000
+    networks:
+      webinar-1:
+        aliases:
+          - backend-v1
+
+networks:
+  webinar-1:

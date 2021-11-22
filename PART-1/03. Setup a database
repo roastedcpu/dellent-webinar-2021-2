@@ -1,0 +1,11 @@
+docker-compose -f docker-compose-4.yml up -d
+docker ps
+docker exec -it <container_id> bash
+    psql -d -d demodb -U dbuser
+    \c
+    SELECT * FROM users;
+
+---> http://localhost:8000
+
+docker-compose -f docker-compose-4.yml down -v
+Remove old backend: docker-compose -f docker-compose-5.yml up --build

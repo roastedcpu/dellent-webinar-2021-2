@@ -1,0 +1,6 @@
+docker-compose -f docker-compose-1.yml up --build
+--> http://localhost:8000
+
+docker-compose -f docker-compose-1.yml ps
+
+docker-compose -f docker-compose-1.yml down -v

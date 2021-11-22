@@ -1,0 +1,5 @@
+docker ps -> get id from postgres
+docker cp  <container_id>:/var/lib/postgresql/data ./backed_up
+
+docker-compose -f docker-compose-5.yml down -v
+docker-compose -f docker-compose-6.yml up --build
