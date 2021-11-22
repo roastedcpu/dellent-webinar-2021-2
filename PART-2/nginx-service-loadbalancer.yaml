@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service-1-loadbalancer
+spec:
+  # For using an external load balancer. each service requires a LB.
+  type: LoadBalancer
+
+  selector:
+    app: nginx
+  ports:
+    - name: http
+      port: 30002
+      targetPort: 80
+      protocol: TCP
+  
